@@ -1,17 +1,17 @@
 import java.util.Scanner;
 
 class Line {
-    String CurrLine;
+    private String currLine;
     void Enter() {
         Scanner in = new Scanner(System.in);
-        CurrLine = in.nextLine();
+        currLine = in.nextLine();
     }
     boolean Judge() {
-        if (CurrLine.equals("bye")) return true;
+        if (currLine.equals("bye")) return true;
         else return false;
     }
     void Echo() {
-        System.out.println("\t" + CurrLine);
+        System.out.println("\t" + currLine);
     }
     void Goodbye() {
         System.out.println("\tBye. Hope to see you again soon!");
@@ -21,15 +21,15 @@ class Line {
 public class Duke {
     public static void main(String args[]) {
         System.out.println("\tHello! I'm Duke\n\tWhat can I do for you?");
-        Line OneLine = new Line();
+        Line oneLine = new Line();
         //enter
-        OneLine.Enter();
+        oneLine.Enter();
         //test this line
-        while (OneLine.Judge() == false) {
-            OneLine.Echo();
-            OneLine.Enter();
+        while (oneLine.Judge() == false) {
+            oneLine.Echo();
+            oneLine.Enter();
         }
         //goodbye
-        OneLine.Goodbye();
+        oneLine.Goodbye();
     }
 }
