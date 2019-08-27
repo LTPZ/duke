@@ -1,6 +1,7 @@
 public class Tasks {
     protected String description;
     protected boolean isDone;
+    protected String type;
 
     public Tasks() {
 
@@ -11,14 +12,22 @@ public class Tasks {
         this.isDone = false;
     }
 
-    public String getTask() {
-        return this.description;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public boolean getDone() {
-        return this.isDone;
+    public String getType() {
+        return type;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public String toString() {
+        if (isDone == true) return "[\u2713]" + description;
+        else return "[\u2717]" + description;
+    }
 
     public void done(){
         this.isDone = true;

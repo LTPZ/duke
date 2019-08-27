@@ -1,3 +1,5 @@
+import jdk.jfr.Event;
+
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -10,24 +12,30 @@ public class Command {
         if (check().equals("bye")) {
             //exit
             goodbye();
-        }
-        else if (check().equals("done")) {
+        } else if (check().equals("done")) {
             //done the task in the list
             doneTask(currTask);
             scantoProcess(currTask, size);
-        }
-        else if (check().equals("list")) {
+        } else if (check().equals("list")) {
             //list the task in the list
             listTask(currTask, size);
             scantoProcess(currTask, size);
-        }
-        else {
-            //add it to the list
-            add(currTask, size);
+        } else if (check().equals("todo")) {
+            //add
+            addToDo(currTask, size);
+            size++;
+            scantoProcess(currTask, size);
+        } else if (check().equals("deadline")) {
+            //add
+            addDDL(currTask, size);
+            size++;
+            scantoProcess(currTask, size);
+        } else {
+            //event
+            addEvent(currTask, size);
             size++;
             scantoProcess(currTask, size);
         }
-        //scan again
     }
 
     private String check() {
@@ -45,20 +53,44 @@ public class Command {
         for (i = 0; i < num - 1; i++);
         currTask[i].done();
         System.out.println("\tNice! I've marked this task as done:");
-        System.out.println("\t[\u2713] " + currTask[i].getTask());
+        if (currTask[i].getType().equals("todo")) System.out.println("\t[T]" + currTask[i].toString());
+        else System.out.println("\t" + currTask[i].toString());
     }
 
     private void listTask(Tasks currTask[], int size) {
         System.out.println("\tHere are the tasks in your list:");
         for (int i = 0; i < size; i++) {
-            if (currTask[i].getDone()) System.out.println("\t" + (i + 1) + ".[\u2713] " + currTask[i].description);
-            else System.out.println("\t" + (i + 1) + ".[\u2717] " + currTask[i].description);
+            if (currTask[i].getType().equals("todo")) System.out.println("\t" + (i + 1) + ".[T]" + currTask[i].toString());
+            else System.out.println("\t" + (i + 1) + "." + currTask[i].toString());
         }
     }
 
-    private  void add(Tasks currTask[], int size) {
-        currTask[size] = new Tasks(currCommand);
-        System.out.println("\tadded: " + currCommand);
+    private  void addToDo(Tasks currTask[], int size) {
+        String content = currCommand.substring(currCommand.indexOf(" "));
+        currTask[size] = new Tasks(content);
+        currTask[size].setType("todo");
+        System.out.println("\tGot it. I've added this task:");
+        System.out.println("\t " + currTask[size].toString());
+        System.out.println("\tNow you have "+ (size + 1) + " tasks in the list.");
+    }
+
+    private  void addDDL(Tasks currTask[], int size) {
+        String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /by"));
+        String by = currCommand.substring(currCommand.indexOf(" /by") + 5);
+        currTask[size] = new Deadline(content, by);
+        currTask[size].setType("deadline");
+        System.out.println("\tGot it. I've added this task:");
+        System.out.println("\t " + currTask[size].toString());
+        System.out.println("\tNow you have "+ (size + 1) + " tasks in the list.");
+    }
+    private  void addEvent(Tasks currTask[], int size) {
+        String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /at"));
+        String at = currCommand.substring(currCommand.indexOf(" /at") + 5);
+        currTask[size] = new Events(content, at);
+        currTask[size].setType("event");
+        System.out.println("\tGot it. I've added this task:");
+        System.out.println("\t " + currTask[size].toString());
+        System.out.println("\tNow you have "+ (size + 1) + " tasks in the list.");
     }
 
     private void goodbye() {
