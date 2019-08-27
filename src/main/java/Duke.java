@@ -18,7 +18,7 @@ class Lines {
             int i = Integer.parseInt(tmp);
             doList[i - 1] = true;
             System.out.println("\tNice! I've marked this task as done:");
-            System.out.println("\t[√] " + theList[i - 1]);
+            System.out.println("\t[\u2713] " + theList[i - 1]);
         }
     }
     private void Numincrease() {
@@ -37,8 +37,8 @@ class Lines {
     private void Showlist() {
         System.out.println("\tHere are the tasks in your list:");
         for (int i = 0; i < num; ++i) {
-            if (doList[i] == true) System.out.println("\t" + (i+1) + ".[√] " + theList[i]);
-            else System.out.println("\t" + (i+1) + ".[×] " + theList[i]);
+            if (doList[i] == true) System.out.println("\t" + (i+1) + ".[\u2713] " + theList[i]);
+            else System.out.println("\t" + (i+1) + ".[\u2717] " + theList[i]);
         }
     }
     boolean process() {
