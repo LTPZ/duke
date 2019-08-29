@@ -1,17 +1,19 @@
-public class Events extends Tasks {
-    protected String at;
+import java.util.Date;
 
-    public Events(String description, String type, String at) {
+public class Events extends Tasks {
+    protected Date at;
+
+    public Events(String description, String type, Date at) {
         super(description, type);
         this.at = at;
     }
 
-    public Events(String description, boolean isDone, String type, String at) {
+    public Events(String description, boolean isDone, String type, Date at) {
         super(description, isDone, type);
         this.at = at;
     }
 
-    public String getAt() {
+    public Date getAt() {
         return at;
     }
 

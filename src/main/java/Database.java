@@ -1,10 +1,9 @@
 import jdk.jfr.Event;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Database {
     protected String currCommand;
@@ -16,7 +15,7 @@ public class Database {
         this.lists = new ArrayList<Tasks>();
     }
 
-    public void oldDataProcess(String s) {
+    public void oldDataProcess(String s) throws ParseException {
         //process the old data
         char t = s.charAt(0);
         String type;
@@ -37,14 +36,16 @@ public class Database {
         String content = s.substring(s.indexOf(" | ") + 3);
         content = content.substring(s.indexOf(" |") + 3);
         String time = null;
+        Date date = null;
         if (content.contains(" | ")) {
             //process as event or deadline
             time = content.substring(content.indexOf(" | ")+3);
             content = content.substring(0,content.indexOf(" | "));
+            date = new SimpleDateFormat("dd/mm/yyyy").parse(time);
         }
         if (type == "todo") lists.add(new Tasks(content, isDone, type));
-        else if (type == "deadline") lists.add(new Deadline(content, isDone, type, time));
-        else lists.add(new Events(content, isDone, type, time));
+        else if (type == "deadline") lists.add(new Deadline(content, isDone, type, date));
+        else lists.add(new Events(content, isDone, type, date));
         size++;
     }
 
@@ -216,7 +217,7 @@ public class Database {
             checkLackInfo();
             checkDeadlineTime();
             String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /by"));
-            String by = currCommand.substring(currCommand.indexOf(" /by") + 5);
+            Date by = new SimpleDateFormat("dd/mm/yyyy").parse(currCommand.substring(currCommand.indexOf(" /by") + 5));
             lists.add(new Deadline(content, "deadline", by));
             System.out.println("\tGot it. I've added this task:");
             System.out.println("\t " + lists.get(size).toString());
@@ -236,7 +237,7 @@ public class Database {
             checkLackInfo();
             checkEventTime();
             String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /at"));
-            String at = currCommand.substring(currCommand.indexOf(" /at") + 5);
+            Date at = new SimpleDateFormat("dd/mm/yyyy").parse(currCommand.substring(currCommand.indexOf(" /at") + 5));
             lists.add(new Events(content, "events", at));
             System.out.println("\tGot it. I've added this task:");
             System.out.println("\t " + lists.get(size).toString());
