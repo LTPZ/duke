@@ -6,6 +6,11 @@ public class Events extends Tasks {
         this.at = at;
     }
 
+    public Events(String description, boolean isDone, String type, String at) {
+        super(description, isDone, type);
+        this.at = at;
+    }
+
     public String getAt() {
         return at;
     }

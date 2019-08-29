@@ -18,12 +18,22 @@ public class Tasks {
         this.type = type;
     }
 
+    public Tasks(String description, boolean isDone, String type) {
+        this.description = description;
+        this.isDone = isDone;
+        this.type = type;
+    }
+
     public void setType(String type) {
         this.type = type;
     }
 
     public String getType() {
         return type;
+    }
+
+    public boolean isDone() {
+        return isDone;
     }
 
     public String getDescription() {
