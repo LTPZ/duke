@@ -12,6 +12,12 @@ public class Tasks {
         this.isDone = false;
     }
 
+    public Tasks(String description, String type) {
+        this.description = description;
+        this.isDone = false;
+        this.type = type;
+    }
+
     public void setType(String type) {
         this.type = type;
     }

@@ -1,14 +1,11 @@
-import jdk.jfr.Event;
-
+import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-
-
 
 public class Command {
     private String currCommand;
 
-    public void scantoProcess(Tasks currTask[], int size) {
+    public void scantoProcess(List<Tasks> currTask, int size) {
         Scanner in = new Scanner(System.in);
         currCommand = in.nextLine();
         try {
@@ -66,7 +63,7 @@ public class Command {
         if (currCommand.indexOf(" /at") == -1) throw new TimeException();
     }
 
-    private void doneTask(Tasks currTask[]) {
+    private void doneTask(List<Tasks> currTask) {
         StringTokenizer tok = new StringTokenizer(currCommand);
         String command1 = tok.nextToken();
         try {
@@ -75,31 +72,30 @@ public class Command {
             int num = Integer.parseInt(numinString);
             int i;
             for (i = 0; i < num - 1; i++) ;
-            currTask[i].done();
+            currTask.get(i).done();
             System.out.println("\tNice! I've marked this task as done:");
-            if (currTask[i].getType().equals("todo")) System.out.println("\t[T]" + currTask[i].toString());
-            else System.out.println("\t" + currTask[i].toString());
+            if (currTask.get(i).getType().equals("todo")) System.out.println("\t[T]" + currTask.get(i).toString());
+            else System.out.println("\t" + currTask.get(i).toString());
         } catch (EntryException e) {
             System.out.println("\t☹ OOPS!!! I cannot done an empty task");
         }
     }
 
-    private void listTask(Tasks currTask[], int size) {
+    private void listTask(List<Tasks> currTask, int size) {
         System.out.println("\tHere are the tasks in your list:");
         for (int i = 0; i < size; i++) {
-            if (currTask[i].getType().equals("todo")) System.out.println("\t" + (i + 1) + ".[T]" + currTask[i].toString());
-            else System.out.println("\t" + (i + 1) + "." + currTask[i].toString());
+            if (currTask.get(i).getType().equals("todo")) System.out.println("\t" + (i + 1) + ".[T]" + currTask.get(i).toString());
+            else System.out.println("\t" + (i + 1) + "." + currTask.get(i).toString());
         }
     }
 
-    private  int addToDo(Tasks currTask[], int size) {
+    private  int addToDo(List<Tasks> currTask, int size) {
         try {
             checkLackInfo();
             String content = currCommand.substring(currCommand.indexOf(" "));
-            currTask[size] = new Tasks(content);
-            currTask[size].setType("todo");
+            currTask.add(new Tasks(content, "todo"));
             System.out.println("\tGot it. I've added this task:");
-            System.out.println("\t " + currTask[size].toString());
+            System.out.println("\t " + currTask.get(size).toString());
             System.out.println("\tNow you have " + (size + 1) + " tasks in the list.");
             size++;
         } catch (EntryException e) {
@@ -109,16 +105,15 @@ public class Command {
         }
     }
 
-    private  int addDDL(Tasks currTask[], int size) {
+    private  int addDDL(List<Tasks> currTask, int size) {
         try {
             checkLackInfo();
             checkDeadlineTime();
             String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /by"));
             String by = currCommand.substring(currCommand.indexOf(" /by") + 5);
-            currTask[size] = new Deadline(content, by);
-            currTask[size].setType("deadline");
+            currTask.add(new Deadline(content, "deadline", by));
             System.out.println("\tGot it. I've added this task:");
-            System.out.println("\t " + currTask[size].toString());
+            System.out.println("\t " + currTask.get(size).toString());
             System.out.println("\tNow you have " + (size + 1) + " tasks in the list.");
             size++;
         } catch (EntryException e) {
@@ -129,16 +124,15 @@ public class Command {
             return size;
         }
     }
-    private  int addEvent(Tasks currTask[], int size) {
+    private  int addEvent(List<Tasks> currTask, int size) {
         try {
             checkLackInfo();
             checkEventTime();
             String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /at"));
             String at = currCommand.substring(currCommand.indexOf(" /at") + 5);
-            currTask[size] = new Events(content, at);
-            currTask[size].setType("event");
+            currTask.add(new Events(content, "events", at));
             System.out.println("\tGot it. I've added this task:");
-            System.out.println("\t " + currTask[size].toString());
+            System.out.println("\t " + currTask.get(size).toString());
             System.out.println("\tNow you have " + (size + 1) + " tasks in the list.");
             size++;
         } catch (EntryException e) {
