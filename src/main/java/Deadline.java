@@ -2,15 +2,22 @@ import java.util.Date;
 
 public class Deadline extends Tasks {
     protected Date by;
-
-    public Deadline(String description, String type, Date by) {
-        super(description, type);
-        this.by = by;
-    }
+    protected String time;
 
     public Deadline(String description, boolean isDone, String type, Date by) {
+        super(description, type);
+        this.by = by;
+        this.isDone = isDone;
+    }
+
+    public Deadline(String description, boolean isDone, String type, Date by, String time) {
         super(description, isDone, type);
         this.by = by;
+        this.time = time;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public Date getBy() {

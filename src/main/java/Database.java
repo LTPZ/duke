@@ -182,7 +182,7 @@ public class Database {
         File data = new File("D:/NUS/IDEs/Du/List.txt");
         FileWriter newData = new FileWriter(data, true);
         PrintWriter pw = new PrintWriter(newData);
-        pw.print("D | " + (dd.isDone()? 1:0) + " |" + dd.getDescription() + " | " + dd.getBy() + "\r\n");
+        pw.print("D | " + (dd.isDone()? 1:0) + " |" + dd.getDescription() + " | " + dd.getTime() + "\r\n");
         pw.flush();
         pw.close();
     }
@@ -190,7 +190,7 @@ public class Database {
         File data = new File("D:/NUS/IDEs/Du/List.txt");
         FileWriter newData = new FileWriter(data, true);
         PrintWriter pw = new PrintWriter(newData);
-        pw.print("E | " + (ev.isDone()? 1:0) + " |" + ev.getDescription() + " | " + ev.getAt() + "\r\n");
+        pw.print("E | " + (ev.isDone()? 1:0) + " |" + ev.getDescription() + " | " + ev.getTime()+ "\r\n");
         pw.flush();
         pw.close();
     }
@@ -217,12 +217,13 @@ public class Database {
             checkLackInfo();
             checkDeadlineTime();
             String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /by"));
-            Date by = new SimpleDateFormat("dd/mm/yyyy").parse(currCommand.substring(currCommand.indexOf(" /by") + 5));
-            lists.add(new Deadline(content, "deadline", by));
+            String time = currCommand.substring(currCommand.indexOf(" /by") + 5);
+            Date by = new SimpleDateFormat("dd/mm/yyyy").parse(time);
+            lists.add(new Deadline(content, false, "deadline", by, time));
             System.out.println("\tGot it. I've added this task:");
             System.out.println("\t " + lists.get(size).toString());
             System.out.println("\tNow you have " + (size + 1) + " tasks in the list.");
-            deadlinefileWrite(new Deadline(content, "deadline", by));
+            deadlinefileWrite(new Deadline(content,false, "deadline", by, time));
             size++;
         } catch (EntryException e) {
             System.out.println("\t☹ OOPS!!! The description of a deadline cannot be empty.");
@@ -237,12 +238,13 @@ public class Database {
             checkLackInfo();
             checkEventTime();
             String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /at"));
-            Date at = new SimpleDateFormat("dd/mm/yyyy").parse(currCommand.substring(currCommand.indexOf(" /at") + 5));
-            lists.add(new Events(content, "events", at));
+            String time = currCommand.substring(currCommand.indexOf(" /by") + 5);
+            Date at = new SimpleDateFormat("dd/mm/yyyy").parse(time);
+            lists.add(new Events(content, false, "events", at, time));
             System.out.println("\tGot it. I've added this task:");
             System.out.println("\t " + lists.get(size).toString());
             System.out.println("\tNow you have " + (size + 1) + " tasks in the list.");
-            eventfileWrite(new Events(content, "events", at));
+            eventfileWrite(new Events(content, false, "events", at, time));
             size++;
         } catch (EntryException e) {
             System.out.println("\t☹ OOPS!!! The description of an event cannot be empty.");
