@@ -1,39 +1,25 @@
-public class Tasks {
+public class Task {
     protected String description;
     protected boolean isDone;
     protected String type;
 
-    public Tasks() {
-
-    }
-
-    public Tasks(String description) {
-        this.description = description;
-        this.isDone = false;
-    }
-
-    public Tasks(String description, String type) {
+    public Task(String description, String type) {
         this.description = description;
         this.isDone = false;
         this.type = type;
     }
 
-    public Tasks(String description, boolean isDone, String type) {
+    public Task(String description, boolean isDone, String type) {
         this.description = description;
         this.isDone = isDone;
         this.type = type;
     }
-
-    public void setType(String type) {
-        this.type = type;
+    public boolean isDone() {
+        return isDone;
     }
 
     public String getType() {
         return type;
-    }
-
-    public boolean isDone() {
-        return isDone;
     }
 
     public String getDescription() {
@@ -45,7 +31,7 @@ public class Tasks {
         else return "[\u2717]" + description;
     }
 
-    public void done(){
+    public void setDone() {
         this.isDone = true;
     }
 }

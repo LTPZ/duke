@@ -1,16 +1,16 @@
 import java.util.Date;
 
-public class Events extends Tasks {
+public class Even extends Task {
     protected Date at;
     protected String time;
 
-    public Events(String description, boolean isDone, String type, Date at) {
+    public Even(String description, boolean isDone, String type, Date at) {
         super(description, type);
         this.at = at;
         this.isDone = isDone;
     }
 
-    public Events(String description, boolean isDone, String type, Date at, String time) {
+    public Even(String description, boolean isDone, String type, Date at, String time) {
         super(description, isDone, type);
         this.at = at;
         this.time = time;
@@ -18,10 +18,6 @@ public class Events extends Tasks {
 
     public String getTime() {
         return time;
-    }
-
-    public Date getAt() {
-        return at;
     }
 
     @Override

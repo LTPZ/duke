@@ -1,6 +1,6 @@
 import java.util.Date;
 
-public class Deadline extends Tasks {
+public class Deadline extends Task {
     protected Date by;
     protected String time;
 
@@ -18,10 +18,6 @@ public class Deadline extends Tasks {
 
     public String getTime() {
         return time;
-    }
-
-    public Date getBy() {
-        return by;
     }
 
     @Override
