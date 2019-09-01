@@ -56,6 +56,10 @@ public class TaskList {
             if (check().equals("bye")) {
                 //exit
                 sayGoodbye();
+            } else if (check().equals("delete")) {
+                //delete the task
+                deleteTask();
+                scanProcess();
             } else if (check().equals("done")) {
                 //done the task in the list
                 doneTask();
@@ -90,7 +94,7 @@ public class TaskList {
     private String check() throws EntryException {
         StringTokenizer tok = new StringTokenizer(currCommand);
         String command1 = tok.nextToken();
-        if (!command1.equals("bye") && !command1.equals("done") &&
+        if (!command1.equals("bye") && !command1.equals("delete") && !command1.equals("done") &&
                 !command1.equals("list") && !command1.equals("todo") && !command1.equals("deadline")
                 && !command1.equals("event") && !command1.equals("find"))
             throw new EntryException();
@@ -99,6 +103,34 @@ public class TaskList {
 
     private void sayGoodbye() {
         System.out.println("\tBye. Hope to see you again soon!");
+    }
+
+    private void deleteTask() {
+        StringTokenizer tok = new StringTokenizer(currCommand);
+        String temp = tok.nextToken();
+        try {
+            //check if more information is needed
+            checkLackInfo();
+            //search for the delete number
+            String numText = tok.nextToken();
+            int num = Integer.parseInt(numText) - 1;
+            System.out.println("\tNoted. I've removed this task:");
+            if (list.get(num).getType().equals("todo")) {
+                //it is a common type
+                System.out.println("\t[T]" + list.get(num).toString());
+            } else {
+                //deadline or event type
+                System.out.println("\t" + list.get(num).toString());
+            }
+            //delete the one in list
+            list.remove(num);
+            System.out.println("\tNow you have " + (size - 1) + " tasks in the list.");
+            //print the change in the file
+            changeFile(num, "delete");
+            size--;
+        } catch (EntryException e) {
+            System.out.println("\t☹ OOPS!!! I cannot delete an empty task, specific number needed");
+        }
     }
 
     private void doneTask() {
@@ -136,10 +168,28 @@ public class TaskList {
         }
     }
 
+    private void addFile(Task currTask, String Type) throws IOException {
+        File data = new File("D:/NUS/IDEs/Du/List.txt");
+        FileWriter newData = new FileWriter(data, true);
+        PrintWriter pw = new PrintWriter(newData);
+        if (Type.equals("todo")) {
+            pw.print("T | " + (currTask.isDone() ? 1 : 0) + " |" + currTask.getDescription() + "\r\n");
+        } else if (Type.equals("deadline")) {
+            Deadline deadline = (Deadline) currTask;
+            pw.print("D | " + (deadline.isDone() ? 1 : 0) + " |" + deadline.getDescription() + " | " + deadline.getTime() + "\r\n");
+        } else {
+            //event
+            Even event = (Even) currTask;
+            pw.print("E | " + (event.isDone() ? 1 : 0) + " |" + event.getDescription() + " | " + event.getTime() + "\r\n");
+        }
+        pw.flush();
+        pw.close();
+    }
+
     private void addToDo() {
         try {
             checkLackInfo();
-            String content = currCommand.substring(currCommand.indexOf(" ") + 1);
+            String content = currCommand.substring(currCommand.indexOf(" "));
             Task currTask = new Task(content, "todo");
             list.add(currTask);
             System.out.println("\tGot it. I've added this task:");
