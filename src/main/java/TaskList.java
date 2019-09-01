@@ -168,24 +168,6 @@ public class TaskList {
         }
     }
 
-    private void addFile(Task currTask, String Type) throws IOException {
-        File data = new File("D:/NUS/IDEs/Du/List.txt");
-        FileWriter newData = new FileWriter(data, true);
-        PrintWriter pw = new PrintWriter(newData);
-        if (Type.equals("todo")) {
-            pw.print("T | " + (currTask.isDone() ? 1 : 0) + " |" + currTask.getDescription() + "\r\n");
-        } else if (Type.equals("deadline")) {
-            Deadline deadline = (Deadline) currTask;
-            pw.print("D | " + (deadline.isDone() ? 1 : 0) + " |" + deadline.getDescription() + " | " + deadline.getTime() + "\r\n");
-        } else {
-            //event
-            Even event = (Even) currTask;
-            pw.print("E | " + (event.isDone() ? 1 : 0) + " |" + event.getDescription() + " | " + event.getTime() + "\r\n");
-        }
-        pw.flush();
-        pw.close();
-    }
-
     private void addToDo() {
         try {
             checkLackInfo();
