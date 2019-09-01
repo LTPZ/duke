@@ -12,15 +12,15 @@ public class Duke {
         System.out.println("Hello from\n" + logo);
         System.out.println("\tHello! I'm Duke\n\tWhat can I do for you?");
         //load data
-        Database database = new Database(0);
+        TaskList tasklist = new TaskList(0);
         File list = new File("D:/NUS/IDEs/Du/List.txt");
         BufferedReader reader = new BufferedReader(new FileReader(list));
         String oldData = null;
         while((oldData = reader.readLine()) != null) {
             //process old data
-            database.oldDataProcess(oldData);
+            tasklist.oldDataProcess(oldData);
         }
         reader.close();
-        database.scantoProcess();
+        tasklist.scantoProcess();
     }
 }

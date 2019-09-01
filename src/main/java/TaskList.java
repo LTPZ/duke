@@ -5,14 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Database {
+public class TaskList {
     protected String currCommand;
-    protected List<Tasks> lists;
+    protected List<Tasks> list;
     protected int size;
 
-    public Database(int size) {
+    public TaskList(int size) {
         this.size = size;
-        this.lists = new ArrayList<Tasks>();
+        this.list = new ArrayList<Tasks>();
     }
 
     public void oldDataProcess(String s) throws ParseException {
@@ -43,9 +43,9 @@ public class Database {
             content = content.substring(0,content.indexOf(" | "));
             date = new SimpleDateFormat("dd/mm/yyyy").parse(time);
         }
-        if (type == "todo") lists.add(new Tasks(content, isDone, type));
-        else if (type == "deadline") lists.add(new Deadline(content, isDone, type, date));
-        else lists.add(new Events(content, isDone, type, date));
+        if (type == "todo") list.add(new Tasks(content, isDone, type));
+        else if (type == "deadline") list.add(new Deadline(content, isDone, type, date));
+        else list.add(new Events(content, isDone, type, date));
         size++;
     }
 
@@ -72,9 +72,13 @@ public class Database {
                 //add
                 size = addDDL();
                 scantoProcess();
-            } else {
+            } else if (check().equals("event")){
                 //event
                 size = addEvent();
+                scantoProcess();
+            } else {
+                //find
+                findKey();
                 scantoProcess();
             }
         } catch (EntryException e) {
@@ -86,7 +90,9 @@ public class Database {
     private String check() throws EntryException{
         StringTokenizer tok = new StringTokenizer(currCommand);
         String command1 = tok.nextToken();
-        if (!command1.equals("bye") && !command1.equals("done") && !command1.equals("list") && !command1.equals("todo") && !command1.equals("deadline") && !command1.equals("event"))
+        if (!command1.equals("bye") && !command1.equals("done") && !command1.equals("list")
+                && !command1.equals("todo") && !command1.equals("deadline") && !command1.equals("event")
+                && !command1.equals("find"))
             throw new EntryException();
         return command1;
     }
@@ -116,10 +122,10 @@ public class Database {
             int num = Integer.parseInt(numinString);
             int i;
             for (i = 0; i < num - 1; i++) ;
-            lists.get(i).done();
+            list.get(i).done();
             System.out.println("\tNice! I've marked this task as done:");
-            if (lists.get(i).getType().equals("todo")) System.out.println("\t[T]" + lists.get(i).toString());
-            else System.out.println("\t" + lists.get(i).toString());
+            if (list.get(i).getType().equals("todo")) System.out.println("\t[T]" + list.get(i).toString());
+            else System.out.println("\t" + list.get(i).toString());
             try {
                 File currList = new File("D:/NUS/IDEs/Du/List.txt");
                 //update the done information by reading and writing to a temp file
@@ -165,8 +171,8 @@ public class Database {
     private void listTask() {
         System.out.println("\tHere are the tasks in your list:");
         for (int i = 0; i < size; i++) {
-            if (lists.get(i).getType().equals("todo")) System.out.println("\t" + (i + 1) + ".[T]" + lists.get(i).toString());
-            else System.out.println("\t" + (i + 1) + "." + lists.get(i).toString());
+            if (list.get(i).getType().equals("todo")) System.out.println("\t" + (i + 1) + ".[T]" + list.get(i).toString());
+            else System.out.println("\t" + (i + 1) + "." + list.get(i).toString());
         }
     }
     private void todofileWrite(Tasks ta) throws IOException {
@@ -195,13 +201,37 @@ public class Database {
         pw.close();
     }
 
+    private void findKey() {
+        StringTokenizer tok = new StringTokenizer(currCommand);
+        String temp = tok.nextToken();
+        try {
+            //check if more information is needed
+            checkLackInfo();
+            String target = tok.nextToken();
+            System.out.println("\tHere are the matching tasks in your list:");
+            int getTime = 0;
+            for (int i = 0; i < size; ++i) {
+                if (list.get(i).getDescription().indexOf(target) != -1) {
+                    getTime++;
+                    if (list.get(i).getType().equals("todo")) {
+                        System.out.println("\t" + getTime + ".[T]" + list.get(i).toString());
+                    } else {
+                        System.out.println("\t" + getTime + "." + list.get(i).toString());
+                    }
+                }
+            }
+        } catch (EntryException e) {
+            System.out.println("\t☹ OOPS!!! I cannot find an empty string, specific string needed");
+        }
+    }
+
     private  int addToDo() {
         try {
             checkLackInfo();
             String content = currCommand.substring(currCommand.indexOf(" "));
-            lists.add(new Tasks(content, "todo"));
+            list.add(new Tasks(content, "todo"));
             System.out.println("\tGot it. I've added this task:");
-            System.out.println("\t " + lists.get(size).toString());
+            System.out.println("\t " + list.get(size).toString());
             System.out.println("\tNow you have " + (size + 1) + " tasks in the list.");
             todofileWrite(new Tasks(content, "todo"));
             size++;
@@ -219,9 +249,9 @@ public class Database {
             String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /by"));
             String time = currCommand.substring(currCommand.indexOf(" /by") + 5);
             Date by = new SimpleDateFormat("dd/mm/yyyy").parse(time);
-            lists.add(new Deadline(content, false, "deadline", by, time));
+            list.add(new Deadline(content, false, "deadline", by, time));
             System.out.println("\tGot it. I've added this task:");
-            System.out.println("\t " + lists.get(size).toString());
+            System.out.println("\t " + list.get(size).toString());
             System.out.println("\tNow you have " + (size + 1) + " tasks in the list.");
             deadlinefileWrite(new Deadline(content,false, "deadline", by, time));
             size++;
@@ -240,9 +270,9 @@ public class Database {
             String content = currCommand.substring(currCommand.indexOf(" "), currCommand.indexOf(" /at"));
             String time = currCommand.substring(currCommand.indexOf(" /by") + 5);
             Date at = new SimpleDateFormat("dd/mm/yyyy").parse(time);
-            lists.add(new Events(content, false, "events", at, time));
+            list.add(new Events(content, false, "events", at, time));
             System.out.println("\tGot it. I've added this task:");
-            System.out.println("\t " + lists.get(size).toString());
+            System.out.println("\t " + list.get(size).toString());
             System.out.println("\tNow you have " + (size + 1) + " tasks in the list.");
             eventfileWrite(new Events(content, false, "events", at, time));
             size++;
@@ -258,4 +288,12 @@ public class Database {
     private void goodbye() {
         System.out.println("\tBye. Hope to see you again soon!");
     }
+}
+
+class EntryException extends Exception {
+
+}
+
+class TimeException extends Exception {
+
 }
