@@ -1,3 +1,1 @@
-T | 1 | this
-D | 1 | that | to
-T | 1 | hi
+T | 0 |one
