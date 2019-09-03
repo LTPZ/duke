@@ -20,7 +20,6 @@ public class Duke {
         Ui ui = new Ui();
         while(true) {
             ui.readCommand();
-            Command command = new Command();
             Parser pa = new Parser(ui.getCurrCommand());
             try {
                 if (pa.parseWord().equals("bye")) {
