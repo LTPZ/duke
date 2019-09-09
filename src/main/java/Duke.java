@@ -1,7 +1,17 @@
 import java.io.IOException;
 import java.text.ParseException;
 
+/**
+ * the main program
+ */
 public class Duke {
+    /**
+     * Start the Duke program
+     *
+     * @param args the entry
+     * @throws IOException
+     * @throws ParseException
+     */
     public static void main(String args[]) throws IOException, ParseException {
         //say hello
         String logo = " ____        _        \n"

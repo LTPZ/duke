@@ -3,13 +3,27 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+/**
+ * The parser to parse the commands
+ */
 public class Parser {
     protected String currCommand;
 
+    /**
+     * Constructor
+     *
+     * @param command the current command to parse
+     */
     public Parser(String command) {
         this.currCommand = command;
     }
 
+    /**
+     * Return the first word of the command if it is the designated command type
+     *
+     * @return the first word of the command
+     * @throws EntryException if the command cannot be understand
+     */
     public String parseWord() throws EntryException {
         StringTokenizer tok = new StringTokenizer(currCommand);
         String command = tok.nextToken();
@@ -20,6 +34,12 @@ public class Parser {
         return command;
     }
 
+    /**
+     * Return the index num
+     *
+     * @return the parsed index num
+     * @throws EntryException if there is no num in the command
+     */
     public int parseIndex() throws EntryException {
         StringTokenizer tok = new StringTokenizer(currCommand);
         tok.nextToken();
@@ -31,6 +51,12 @@ public class Parser {
         return num;
     }
 
+    /**
+     * Return the command for todo type
+     *
+     * @return the todo content
+     * @throws Exception
+     */
     public Task parseToDo() throws Exception {
         checkLackInfo();
         String content = currCommand.substring(currCommand.indexOf(" ") + 1);
@@ -38,6 +64,12 @@ public class Parser {
         return currTask;
     }
 
+    /**
+     * Return the command for deadline type
+     *
+     * @return the deadline content
+     * @throws Exception
+     */
     public Deadline parseDeadline() throws Exception {
         checkLackInfo();
         checkDeadlineTime();
@@ -58,6 +90,12 @@ public class Parser {
         return event;
     }
 
+    /**
+     * Return the command for finding key type
+     *
+     * @return the key content
+     * @throws EntryException if the key is not there
+     */
     public String findKey() throws EntryException {
         StringTokenizer tok = new StringTokenizer(currCommand);
         tok.nextToken();
@@ -66,6 +104,11 @@ public class Parser {
         return key;
     }
 
+    /**
+     * Check if lack information
+     *
+     * @throws EntryException if the command lack information
+     */
     public void checkLackInfo() throws EntryException {
         StringTokenizer tok = new StringTokenizer(currCommand);
         String tmp = tok.nextToken();
@@ -74,6 +117,11 @@ public class Parser {
         }
     }
 
+    /**
+     * Check if the deadline time is there
+     *
+     * @throws TimeException if the time is not the designated format
+     */
     public void checkDeadlineTime() throws TimeException {
         //check if there is no time
         if (currCommand.indexOf(" /by") == -1) {
@@ -81,6 +129,11 @@ public class Parser {
         }
     }
 
+    /**
+     * Check if the event time is there
+     *
+     * @throws TimeException if the time is not the designated format
+     */
     public void checkEventTime() throws TimeException {
         //check if there is no time
         if (currCommand.indexOf(" /at") == -1) {

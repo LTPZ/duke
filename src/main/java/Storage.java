@@ -5,17 +5,34 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The class to deal with storage problems
+ */
 public class Storage {
     protected List<Task> list;
 
+    /**
+     * Constructor
+     */
     public Storage() {
         this.list = new ArrayList<>();
     }
 
+    /**
+     * Returns the task list in the storage
+     *
+     * @return The task list in the storage.
+     */
     public List<Task> getList() {
         return list;
     }
 
+    /**
+     * process the task list from the list
+     *
+     * @param s the task line in the list
+     * @throws ParseException
+     */
     private void processFile(String s) throws ParseException {
         //process the old data
         char t = s.charAt(0);
@@ -49,6 +66,12 @@ public class Storage {
         else list.add(new Even(content, isDone, type, date));
     }
 
+    /**
+     * Load the task list file
+     *
+     * @throws IOException
+     * @throws ParseException
+     */
     public void readFile() throws IOException, ParseException {
         File list = new File("D:/NUS/IDEs/Du/List.txt");
         BufferedReader reader = new BufferedReader(new FileReader(list));
@@ -60,6 +83,13 @@ public class Storage {
         reader.close();
     }
 
+    /**
+     * Print the new tasks in the file
+     *
+     * @param currTask the new task
+     * @param Type the type of the task
+     * @throws IOException
+     */
     public void addFile(Task currTask, String Type) throws IOException {
         File data = new File("D:/NUS/IDEs/Du/List.txt");
         FileWriter newData = new FileWriter(data, true);
@@ -78,6 +108,12 @@ public class Storage {
         pw.close();
     }
 
+    /**
+     * Delete or done tasks in the file
+     *
+     * @param changedIndex the index of the changed task
+     * @param Type the type of the task
+     */
     public void changeFile(int changedIndex, String Type) {
         //this is used to delete or done tasks and print them in the file
         try {
